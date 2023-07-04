@@ -36,7 +36,7 @@ function App() {
 
 	const handleSubmit = event => {
 		event.preventDefault();
-		getMovies();
+		getMovies({ search });
 	};
 
 	const handleSort = () => {
@@ -44,7 +44,9 @@ function App() {
 	};
 
 	const handleChange = event => {
-		updateSearch(event.target.value);
+		const newSearch = event.target.value;
+		updateSearch(newSearch);
+		getMovies({ search: newSearch });
 	};
 
 	return (
