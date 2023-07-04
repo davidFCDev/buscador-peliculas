@@ -1,20 +1,49 @@
 import { Movies } from './components/Movies';
 import { useMovies } from './hooks/useMovies';
 import './App.css';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // eslint-disable-next-line no-unused-vars
 const API_KEY_OMDB = '6c52a547';
 const API_URL = `https://www.omdbapi.com/?${API_KEY_OMDB}=6c52a547&s=avengers`;
 
+function useSearch() {
+	const [search, updateSearch] = useState('');
+	const [error, setError] = useState(null);
+	const isFirstInput = useRef(true);
+
+	useEffect(() => {
+		if (isFirstInput.current) {
+			isFirstInput.current = search === ''
+			return
+		}
+		if (search === '') {
+			setError('No se puede buscar una película vacía');
+			return;
+		}
+
+		if (search.length < 3) {
+			setError('La búsqueda debe tener al menos 3 caracteres');
+			return;
+		}
+
+		setError(null);
+	}, [search]);
+
+	return { search, updateSearch, error };
+}
+
 function App() {
 	const { movies } = useMovies();
-	const inputRef = useRef();
+	const { search, updateSearch, error } = useSearch();
 
 	const handleSubmit = event => {
 		event.preventDefault();
-		const { query } = Object.fromEntries(new window.FormData(event.target));
-		console.log({ query });
+		console.log({ search });
+	};
+
+	const handleChange = event => {
+		updateSearch(event.target.value);
 	};
 
 	return (
@@ -24,11 +53,13 @@ function App() {
 				<form className='form' onSubmit={handleSubmit}>
 					<input
 						name='query'
-						ref={inputRef}
+						onChange={handleChange}
+						value={search}
 						placeholder='Avengers, matrix...'
 					/>
 					<button>Buscar</button>
 				</form>
+				{error && <p style={{ color: 'red' }}>{error}</p>}
 			</header>
 
 			<main>
