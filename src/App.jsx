@@ -1,11 +1,7 @@
 import { Movies } from './components/Movies';
 import { useMovies } from './hooks/useMovies';
-import './App.css';
 import { useEffect, useRef, useState } from 'react';
-
-// eslint-disable-next-line no-unused-vars
-const API_KEY_OMDB = '6c52a547';
-const API_URL = `https://www.omdbapi.com/?${API_KEY_OMDB}=6c52a547&s=avengers`;
+import './App.css';
 
 function useSearch() {
 	const [search, updateSearch] = useState('');
@@ -14,8 +10,8 @@ function useSearch() {
 
 	useEffect(() => {
 		if (isFirstInput.current) {
-			isFirstInput.current = search === ''
-			return
+			isFirstInput.current = search === '';
+			return;
 		}
 		if (search === '') {
 			setError('No se puede buscar una película vacía');
@@ -34,12 +30,12 @@ function useSearch() {
 }
 
 function App() {
-	const { movies } = useMovies();
 	const { search, updateSearch, error } = useSearch();
+	const { movies, getMovies } = useMovies({ search });
 
 	const handleSubmit = event => {
 		event.preventDefault();
-		console.log({ search });
+		getMovies();
 	};
 
 	const handleChange = event => {
