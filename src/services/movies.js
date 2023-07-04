@@ -1,7 +1,4 @@
-import { useMovies } from '../hooks/useMovies';
-
 export const searchMovies = async ({ search }) => {
-	const { setResponseMovies } = useMovies();
 	const API_KEY_OMDB = '6c52a547';
 	const API_URL = `https://www.omdbapi.com/?apikey=${API_KEY_OMDB}&s=${search}`;
 
